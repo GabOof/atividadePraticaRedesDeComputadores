@@ -1,0 +1,2 @@
+# Atividade Prática Redes de Computadores
+Essa atividade foi passada em sala com o objetivo de trabalhar o desenvolvimento de `multithread` em um código projetado para o estudo de `sockets`. A tarefa era fazer, de forma simples, uma solução para conexão de vários cliente paralelamente.
