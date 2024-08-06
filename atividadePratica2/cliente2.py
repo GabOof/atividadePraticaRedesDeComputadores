@@ -1,6 +1,33 @@
 from datetime import datetime
 import socket
-import threading
+
+
+# Função para exibir o menu e capturar a escolha do usuário
+def exibir_menu():
+    print(f"\n{'='*80}\nEscolha uma ação:")
+    print("1. Enviar mensagem")
+    print("2. Listar mensagens")
+    print(f"3. Sair\n{'='*80}\n")
+    escolha = input("Digite o número da ação desejada:")
+    return escolha
+
+
+# Função para enviar uma mensagem
+def enviar_mensagem(soquete, cliente_id):
+    destinatario = input("\nDigite o ID do destinatário: ")
+    conteudo = input("\nDigite a mensagem: ")
+    mensagem = f"{client_id} SEND {destinatario} {conteudo}"  # Formata a mensagem com o ID do cliente, comando SEND, ID do destinatário e conteúdo da mensagem
+    soquete.send(mensagem.encode("utf-8"))
+    resposta = soquete.recv(1024).decode("utf-8")
+    print(f"\nResposta do servidor: {resposta}")
+
+
+# Função para listar mensagens
+def listar_mensagens(soquete, cliente_id):
+    mensagem = f"{client_id} LIST {cliente_id}"  # Formata a mensagem com o ID do cliente e o comando LIST
+    soquete.send(mensagem.encode("utf-8"))
+    resposta = soquete.recv(1024).decode("utf-8")
+    print(f"\nMensagens recebidas: {resposta}")
 
 
 # Função que representa a tarefa de um cliente
@@ -12,11 +39,19 @@ def client_task(client_id):
 
     try:
         soquete.connect(destino)
-        mensagem = f"Olá Mundo! -> from client {client_id}"
-        soquete.send(mensagem.encode("utf-8"))  # Envia a mensagem codificada em bytes
-        print(
-            f"{'='*80}\nCliente {client_id} enviou ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')}): {mensagem}"
-        )
+        print(f"\nCliente {client_id} conectado ao servidor.")
+
+        while True:
+            escolha = exibir_menu()
+            if escolha == "1":
+                enviar_mensagem(soquete, client_id)
+            elif escolha == "2":
+                listar_mensagens(soquete, client_id)
+            elif escolha == "3":
+                print("\nFechando conexão...")
+                break  # Sai do loop e fecha a conexão
+            else:
+                print("\nEscolha inválida. Tente novamente.")
 
     finally:
         soquete.close()
@@ -25,19 +60,7 @@ def client_task(client_id):
         )
 
 
-num_clients = 10
-
-# Lista para armazenar as threads dos clientes
-threads = []
-for i in range(num_clients):
-    t = threading.Thread(
-        target=client_task, args=(i,)
-    )  # Cria uma nova thread para cada cliente
-    threads.append(t)
-    t.start()
-
-# Aguarda todas as threads de clientes finalizarem
-for t in threads:
-    t.join()
-
-print("\nConexão concluída.")
+# Entrada do programa
+if __name__ == "__main__":
+    client_id = input("\nDigite o ID do cliente: ")
+    client_task(client_id)  # Executa a tarefa do cliente com o ID fornecido
