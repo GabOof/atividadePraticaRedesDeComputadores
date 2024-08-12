@@ -8,59 +8,73 @@ def exibir_menu():
     print("1. Enviar mensagem")
     print("2. Listar mensagens")
     print(f"3. Sair\n{'='*80}\n")
-    escolha = input("Digite o número da ação desejada:")
+    escolha = input(
+        "Digite o número da ação desejada: "
+    )  # Captura a escolha do usuário
     return escolha
 
 
 # Função para enviar uma mensagem
 def enviar_mensagem(soquete, cliente_id):
-    destinatario = input("\nDigite o ID do destinatário: ")
-    conteudo = input("\nDigite a mensagem: ")
-    mensagem = f"{client_id} SEND {destinatario} {conteudo}"  # Formata a mensagem com o ID do cliente, comando SEND, ID do destinatário e conteúdo da mensagem
-    soquete.send(mensagem.encode("utf-8"))
-    resposta = soquete.recv(1024).decode("utf-8")
-    print(f"\nResposta do servidor: {resposta}")
+    destinatario = input(
+        "\nDigite o ID do destinatário: "
+    )  # Captura o ID do destinatário
+    conteudo = input("\nDigite a mensagem: ")  # Captura o conteúdo da mensagem
+    mensagem = f"{cliente_id} SEND {destinatario} {conteudo}"  # Formata a mensagem com o ID do cliente, comando SEND, ID do destinatário e conteúdo
+    soquete.send(
+        mensagem.encode("utf-8")
+    )  # Envia a mensagem codificada para o servidor
+    resposta = soquete.recv(1024).decode(
+        "utf-8"
+    )  # Recebe a resposta do servidor e decodifica
+    print(f"\nResposta do servidor: {resposta}")  # Exibe a resposta recebida
 
 
 # Função para listar mensagens
 def listar_mensagens(soquete, cliente_id):
-    mensagem = f"{client_id} LIST {cliente_id}"  # Formata a mensagem com o ID do cliente e o comando LIST
-    soquete.send(mensagem.encode("utf-8"))
-    resposta = soquete.recv(1024).decode("utf-8")
-    print(f"\nMensagens recebidas: {resposta}")
+    mensagem = f"{cliente_id} LIST {cliente_id}"  # Formata a mensagem com o ID do cliente e o comando LIST
+    soquete.send(
+        mensagem.encode("utf-8")
+    )  # Envia a mensagem codificada para o servidor
+    resposta = soquete.recv(1024).decode(
+        "utf-8"
+    )  # Recebe a resposta do servidor e decodifica
+    print(f"\nMensagens recebidas: {resposta}")  # Exibe as mensagens recebidas
 
 
 # Função que representa a tarefa de um cliente
-def client_task(client_id):
+def client_task(cliente_id):
     host = "127.0.0.1"  # Endereço IP do servidor (localhost)
     porta = 5001  # Porta onde o servidor estará escutando
-    soquete = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    soquete = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Cria um socket TCP/IP
     destino = (host, porta)
 
     try:
-        soquete.connect(destino)
-        print(f"\nCliente {client_id} conectado ao servidor.")
+        soquete.connect(destino)  # Conecta ao servidor
+        print(f"\nCliente {cliente_id} conectado ao servidor.")
 
         while True:
-            escolha = exibir_menu()
+            escolha = exibir_menu()  # Exibe o menu e captura a escolha do usuário
             if escolha == "1":
-                enviar_mensagem(soquete, client_id)
+                enviar_mensagem(soquete, cliente_id)  # Envia uma mensagem
             elif escolha == "2":
-                listar_mensagens(soquete, client_id)
+                listar_mensagens(soquete, cliente_id)  # Lista mensagens
             elif escolha == "3":
                 print("\nFechando conexão...")
-                break  # Sai do loop e fecha a conexão
+                break  # Sai do loop e encerra a conexão
             else:
-                print("\nEscolha inválida. Tente novamente.")
+                print(
+                    "\nEscolha inválida. Tente novamente."
+                )  # Mensagem para escolha inválida
 
     finally:
-        soquete.close()
+        soquete.close()  # Fecha a conexão com o servidor
         print(
-            f"\nCliente {client_id} fechou a conexão ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})\n{'='*80}"
+            f"\nCliente {cliente_id} fechou a conexão ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})\n{'='*80}"
         )
 
 
 # Entrada do programa
 if __name__ == "__main__":
-    client_id = input("\nDigite o ID do cliente: ")
-    client_task(client_id)  # Executa a tarefa do cliente com o ID fornecido
+    cliente_id = input("\nDigite o ID do cliente: ")  # Captura o ID do cliente
+    client_task(cliente_id)  # Executa a tarefa do cliente com o ID fornecido
