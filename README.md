@@ -1,4 +1,6 @@
-# Redes de Computadores - Atividade Prática 1
+# Redes de Computadores
+
+## Atividade Prática 1
 
 ### Objetivo
 
@@ -11,7 +13,7 @@ Desenvolver uma solução utilizando `multithreading` em um código projetado pa
 
 ---
 
-# Redes de Computadores - Atividade Prática 2
+## Atividade Prática 2
 
 ### Requisitos
 
@@ -36,7 +38,7 @@ Dentro da `thread` do servidor:
 
 ---
 
-# Redes de Computadores - Atividade Prática 3
+## Atividade Prática 3
 
 ### Requisitos
 
